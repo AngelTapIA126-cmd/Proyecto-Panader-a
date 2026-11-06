@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panadería Tapia – Pixtun, Campeche</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400;1,700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream:      '#F7EDD8',
+            'cream-dark': '#EDD9B0',
+            terracotta: '#C0614A',
+            'terra-dark': '#9E4535',
+            barro:      '#7A4528',
+            'barro-light': '#A0643E',
+            naranja:    '#E8863A',
+            'naranja-dark': '#C96D20',
+            trigo:      '#D4A056',
+            'text-dark':'#3A1F0D',
+            'text-mid': '#6B3A1F',
+          },
+          fontFamily: {
+            serif:  ['Playfair Display', 'Georgia', 'serif'],
+            sans:   ['Lato', 'Helvetica Neue', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ---- Global ---- */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: #F7EDD8;
+      color: #3A1F0D;
+      font-family: 'Lato', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ---- Noise / Grain texture ---- */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: .5;
+    }
+
+    /* ---- Scrollbar ---- */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #F7EDD8; }
+    ::-webkit-scrollbar-thumb { background: #C0614A; border-radius: 3px; }
+
+    /* ---- Nav ---- */
+    #navbar {
+      transition: background .35s, box-shadow .35s;
+    }
+    #navbar.scrolled {
+      background: rgba(247,237,216,.96) !important;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 20px rgba(58,31,13,.15);
+    }
+
+    /* ---- Hero ---- */
+    .hero-bg {
+      background: linear-gradient(170deg, #3A1F0D 0%, #7A4528 40%, #C0614A 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(232,134,58,.25) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    /* Decorative wheat SVG watermark */
+    .wheat-mark {
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 380px; height: 380px;
+      opacity: .07;
+      fill: #F7EDD8;
+      pointer-events: none;
+    }
+
+    /* ---- Wavy divider ---- */
+    .wave-divider svg { display: block; }
+
+    /* ---- Product cards ---- */
+    .card-pan {
+      background: #fff8ef;
+      border: 1.5px solid rgba(192,97,74,.15);
+      border-radius: 18px;
+      overflow: hidden;
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
+    }
+    .card-pan:hover {
+      transform: translateY(-7px) rotate(.4deg);
+      box-shadow: 0 20px 40px rgba(122,69,40,.18);
+    }
+    .card-pan img {
+      transition: transform .5s ease;
+    }
+    .card-pan:hover img {
+      transform: scale(1.07);
+    }
+    .badge-artesanal {
+      background: linear-gradient(135deg, #E8863A, #C0614A);
+      color: #fff;
+      font-size: .65rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    /* ---- Historia decorative line ---- */
+    .ornament-line {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .ornament-line::before, .ornament-line::after {
+      content: ''; flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #C0614A 50%, transparent);
+    }
+
+    /* ---- Floating WhatsApp button ---- */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      width: 58px; height: 58px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 25px rgba(37,211,102,.45);
+      z-index: 1000;
+      transition: transform .25s cubic-bezier(.34,1.56,.64,1);
+    }
+    .whatsapp-float:hover { transform: scale(1.12); }
+
+    /* ---- Buttons ---- */
+    .btn-primary {
+      background: linear-gradient(135deg, #E8863A 0%, #C0614A 100%);
+      color: #fff;
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      letter-spacing: .04em;
+      border-radius: 50px;
+      padding: 14px 32px;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 6px 20px rgba(192,97,74,.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(192,97,74,.45);
+    }
+    .btn-secondary {
+      border: 2px solid #C0614A;
+      color: #C0614A;
+      background: transparent;
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      letter-spacing: .04em;
+      border-radius: 50px;
+      padding: 12px 28px;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: background .2s, color .2s, transform .2s;
+    }
+    .btn-secondary:hover {
+      background: #C0614A; color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* ---- Section titles ---- */
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      color: #3A1F0D;
+    }
+    .section-subtitle {
+      font-family: 'Lato', sans-serif;
+      font-size: 1rem;
+      color: #7A4528;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    /* ---- Fade-in on scroll ---- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ---- Historia section ---- */
+    .historia-bg {
+      background:
+        url('https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1600&q=80&auto=format&fit=crop') center/cover no-repeat;
+      position: relative;
+    }
+    .historia-bg::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(58,31,13,.93) 0%, rgba(122,69,40,.88) 100%);
+    }
+
+    /* ---- Horario badge ---- */
+    .horario-item {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(247,237,216,.2);
+      border-radius: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ---- Map placeholder ---- */
+    .map-container {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 3px solid rgba(192,97,74,.3);
+    }
+
+    /* ---- Footer ---- */
+    footer {
+      background: #3A1F0D;
+    }
+
+    /* mobile nav toggle */
+    #nav-menu { display: none; }
+    #nav-menu.open { display: flex; }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVBAR
+  ============================================================ -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 px-5 py-4">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+
+      <!-- Logo -->
+      <a href="#inicio" class="flex flex-col leading-none">
+        <span class="font-serif font-bold text-xl text-terracotta">Panadería</span>
+        <span class="font-serif italic text-barro text-2xl -mt-1">Tapia</span>
+      </a>
+
+      <!-- Desktop links -->
+      <div class="hidden md:flex items-center gap-7">
+        <a href="#catalogo" class="text-text-mid font-sans font-bold text-sm hover:text-terracotta transition-colors tracking-wide">Nuestros Panes</a>
+        <a href="#historia" class="text-text-mid font-sans font-bold text-sm hover:text-terracotta transition-colors tracking-wide">Nuestra Historia</a>
+        <a href="#ubicacion" class="text-text-mid font-sans font-bold text-sm hover:text-terracotta transition-colors tracking-wide">Ubicación</a>
+        <a href="https://wa.me/529827311387?text=Hola%2C+quiero+hacer+un+pedido+en+Panadería+Tapia" target="_blank"
+           class="btn-primary text-sm py-2.5 px-6">
+          🛒 Haz tu pedido
+        </a>
+      </div>
+
+      <!-- Mobile hamburger -->
+      <button id="hamburger" class="md:hidden flex flex-col gap-1.5 p-2"
+              onclick="document.getElementById('nav-menu').classList.toggle('open')">
+        <span class="block w-6 h-0.5 bg-barro rounded"></span>
+        <span class="block w-6 h-0.5 bg-barro rounded"></span>
+        <span class="block w-4 h-0.5 bg-barro rounded"></span>
+      </button>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="nav-menu" class="flex-col gap-4 bg-cream/[.97] backdrop-blur px-6 py-5 mt-3 rounded-2xl shadow-xl md:hidden border border-cream-dark">
+      <a href="#catalogo" class="text-text-dark font-sans font-bold text-base hover:text-terracotta transition-colors"
+         onclick="document.getElementById('nav-menu').classList.remove('open')">Nuestros Panes</a>
+      <a href="#historia" class="text-text-dark font-sans font-bold text-base hover:text-terracotta transition-colors"
+         onclick="document.getElementById('nav-menu').classList.remove('open')">Nuestra Historia</a>
+      <a href="#ubicacion" class="text-text-dark font-sans font-bold text-base hover:text-terracotta transition-colors"
+         onclick="document.getElementById('nav-menu').classList.remove('open')">Ubicación</a>
+      <a href="https://wa.me/529827311387" target="_blank" class="btn-primary text-sm text-center justify-center">
+        🛒 Haz tu pedido
+      </a>
+    </div>
+  </nav>
+
+
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section id="inicio" class="hero-bg min-h-screen flex flex-col justify-center relative">
+
+    <!-- Decorative wheat watermark SVG -->
+    <svg class="wheat-mark" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="20" rx="12" ry="22" transform="rotate(-30 100 20)"/>
+      <ellipse cx="100" cy="20" rx="12" ry="22" transform="rotate(30 100 20)"/>
+      <ellipse cx="100" cy="40" rx="14" ry="26" transform="rotate(-45 100 40)"/>
+      <ellipse cx="100" cy="40" rx="14" ry="26" transform="rotate(45 100 40)"/>
+      <ellipse cx="100" cy="65" rx="16" ry="28" transform="rotate(-60 100 65)"/>
+      <ellipse cx="100" cy="65" rx="16" ry="28" transform="rotate(60 100 65)"/>
+      <rect x="98" y="20" width="4" height="140" rx="2"/>
+    </svg>
+
+    <div class="max-w-6xl mx-auto px-5 pt-28 pb-20 grid md:grid-cols-2 gap-10 items-center relative z-10">
+
+      <!-- Text -->
+      <div class="text-center md:text-left">
+        <p class="text-naranja font-sans font-bold text-xs tracking-widest uppercase mb-4">
+          ✦ Desde 1978, Pixtun, Campeche ✦
+        </p>
+        <h1 class="font-serif font-extrabold leading-tight text-cream mb-6"
+            style="font-size: clamp(2.4rem, 6vw, 4.2rem);">
+          El sabor de la<br/>
+          <em class="text-naranja italic">tradición</em><br/>
+          en el corazón<br/>de Campeche
+        </h1>
+        <p class="text-cream-dark font-sans text-lg leading-relaxed mb-8 max-w-md mx-auto md:mx-0">
+          Cada madrugada encendemos el horno de leña para traerte el pan más fresco de Pixtun.
+          Aromas que despiertan el alma, recetas que guardan la historia de nuestra familia.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+          <a href="https://wa.me/529827311387?text=Hola%2C+quiero+hacer+un+pedido%21" target="_blank"
+             class="btn-primary text-base">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="flex-shrink-0">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+            </svg>
+            Pedir por WhatsApp
+          </a>
+          <a href="#catalogo" class="btn-secondary border-cream text-cream hover:bg-cream hover:text-barro text-base">
+            Ver nuestros panes
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero image -->
+      <div class="hidden md:block relative">
+        <div class="absolute -inset-4 rounded-3xl bg-gradient-to-br from-naranja/20 to-terracotta/10 blur-2xl"></div>
+        <div style="border-radius:60% 40% 55% 45% / 45% 55% 40% 60%; overflow:hidden; border: 3px solid rgba(247,237,216,.2);" class="relative shadow-2xl aspect-square max-w-sm mx-auto">
+          <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=700&q=85&auto=format&fit=crop"
+               alt="Pan artesanal recién salido del horno"
+               class="w-full h-full object-cover" />
+        </div>
+        <!-- Floating badges -->
+        <div class="absolute top-4 -left-6 bg-cream rounded-2xl px-4 py-2 shadow-lg flex items-center gap-2 text-sm font-bold text-barro">
+          <span class="text-lg">🌾</span> Horno de leña
+        </div>
+        <div class="absolute bottom-8 -right-4 bg-terracotta rounded-2xl px-4 py-2 shadow-lg flex items-center gap-2 text-sm font-bold text-cream">
+          <span class="text-lg">🕔</span> Desde las 5 AM
+        </div>
+      </div>
+    </div>
+
+    <!-- Wave bottom -->
+    <div class="wave-divider absolute bottom-0 left-0 right-0">
+      <svg viewBox="0 0 1440 80" preserveAspectRatio="none" style="height:80px;width:100%;">
+        <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,30 1440,40 L1440,80 L0,80 Z" fill="#F7EDD8"/>
+      </svg>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FEATURED BAR (stats / trust)
+  ============================================================ -->
+  <section class="py-10 bg-cream" >
+    <div class="max-w-5xl mx-auto px-5">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <div class="reveal bg-white/70 rounded-2xl p-5 shadow-sm border border-cream-dark">
+          <p class="font-serif font-bold text-3xl text-terracotta">+45</p>
+          <p class="text-xs font-sans text-text-mid tracking-wide mt-1">Años de tradición</p>
+        </div>
+        <div class="reveal bg-white/70 rounded-2xl p-5 shadow-sm border border-cream-dark" style="transition-delay:.1s">
+          <p class="font-serif font-bold text-3xl text-terracotta">100%</p>
+          <p class="text-xs font-sans text-text-mid tracking-wide mt-1">Ingredientes naturales</p>
+        </div>
+        <div class="reveal bg-white/70 rounded-2xl p-5 shadow-sm border border-cream-dark" style="transition-delay:.2s">
+          <p class="font-serif font-bold text-3xl text-terracotta">30+</p>
+          <p class="text-xs font-sans text-text-mid tracking-wide mt-1">Variedades de pan</p>
+        </div>
+        <div class="reveal bg-white/70 rounded-2xl p-5 shadow-sm border border-cream-dark" style="transition-delay:.3s">
+          <p class="font-serif font-bold text-3xl text-terracotta">Diario</p>
+          <p class="text-xs font-sans text-text-mid tracking-wide mt-1">Pan fresco, sin falta</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       CATÁLOGO
+  ============================================================ -->
+  <section id="catalogo" class="py-20 bg-cream">
+    <div class="max-w-6xl mx-auto px-5">
+
+      <div class="text-center mb-14 reveal">
+        <p class="section-subtitle mb-3">✦ Lo que más nos piden ✦</p>
+        <h2 class="section-title">Favoritos de la casa</h2>
+        <p class="text-text-mid font-sans mt-4 max-w-lg mx-auto text-base leading-relaxed">
+          Pan elaborado con amor cada madrugada, con las recetas que el abuelo José Tapia nos heredó.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Concha -->
+        <div class="card-pan reveal" style="transition-delay:.05s">
+          <div class="overflow-hidden h-48">
+            <img src="https://cdn1.matadornetwork.com/blogs/2/2018/10/conchas-mexicanas-shutterstock_409664776.jpg"
+                 alt="Conchas" class="w-full h-full object-cover"/>
+          </div>
+          <div class="p-5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="badge-artesanal">Clásico</span>
+              <span class="text-trigo font-serif font-bold text-lg">$8</span>
+            </div>
+            <h3 class="font-serif font-bold text-xl text-text-dark mb-1">Conchas</h3>
+            <p class="text-text-mid text-sm leading-relaxed">
+              Suaves, esponjosas y con costra de azúcar. En vainilla y chocolate, como las de siempre.
+            </p>
+          </div>
+        </div>
+
+        <!-- Pan de Huevo -->
+        <div class="card-pan reveal" style="transition-delay:.15s">
+          <div class="overflow-hidden h-48">
+            <img src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=500&q=80&auto=format&fit=crop"
+                 alt="Pan de Huevo" class="w-full h-full object-cover"/>
+          </div>
+          <div class="p-5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="badge-artesanal">Tradicional</span>
+              <span class="text-trigo font-serif font-bold text-lg">$10</span>
+            </div>
+            <h3 class="font-serif font-bold text-xl text-text-dark mb-1">Pan de Huevo</h3>
+            <p class="text-text-mid text-sm leading-relaxed">
+              Dorado, tierno y con ese aroma inconfundible. El compañero ideal del café campechano.
+            </p>
+          </div>
+        </div>
+
+        <!-- Bolillo -->
+        <div class="card-pan reveal" style="transition-delay:.25s">
+          <div class="overflow-hidden h-48">
+            <img src="https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=500&q=80&auto=format&fit=crop"
+                 alt="Bolillo Crujiente" class="w-full h-full object-cover"/>
+          </div>
+          <div class="p-5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="badge-artesanal">Horno de leña</span>
+              <span class="text-trigo font-serif font-bold text-lg">$5</span>
+            </div>
+            <h3 class="font-serif font-bold text-xl text-text-dark mb-1">Bolillo Crujiente</h3>
+            <p class="text-text-mid text-sm leading-relaxed">
+              Corteza crocante al salir del horno, miga suave por dentro. El pan de la cena en Pixtun.
+            </p>
+          </div>
+        </div>
+        <!-- Frances -->
+        <div class="card-pan reveal" style="transition-delay:.25s">
+          <div class="overflow-hidden h-48">
+            <img src="https://www.labrujula24.com/wp-content/uploads/2022/06/pan.jpg"
+                 alt="Frances" class="w-full h-full object-cover"/>
+          </div>
+          <div class="p-5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="badge-artesanal">Tradicional</span>
+              <span class="text-trigo font-serif font-bold text-lg">$7</span>
+            </div>
+            <h3 class="font-serif font-bold text-xl text-text-dark mb-1">Frances</h3>
+            <p class="text-text-mid text-sm leading-relaxed">
+              Crujiente por fuera, tierno por dentro. El pan perfecto para el desayuno.
+            </p>
+          </div>
+        </div>
+
+        <!-- Repostería Regional -->
+        <div class="card-pan reveal" style="transition-delay:.35s">
+          <div class="overflow-hidden h-48">
+            <img src="https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=500&q=80&auto=format&fit=crop"
+                 alt="Repostería Regional" class="w-full h-full object-cover"/>
+          </div>
+          <div class="p-5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="badge-artesanal">Regional</span>
+              <span class="text-trigo font-serif font-bold text-lg">$15</span>
+            </div>
+            <h3 class="font-serif font-bold text-xl text-text-dark mb-1">Repostería Regional</h3>
+            <p class="text-text-mid text-sm leading-relaxed">
+              Polvorones, marquesitas y dulces de coco con los sabores auténticos del sureste mexicano.
+            </p>
+          </div>
+        </div>
+
+        <!-- Rosca de Reyes -->
+        <div class="card-pan reveal" style="transition-delay:.45s">
+          <div class="overflow-hidden h-48">
+            <img src="imagenes/rosca-de-reyes.png"
+                 alt="Rosca de Reyes" class="w-full h-full object-cover"/>
+          </div>
+          <div class="p-5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="badge-artesanal">Temporada</span>
+              <span class="text-trigo font-serif font-bold text-lg">$250</span>
+            </div>
+            <h3 class="font-serif font-bold text-xl text-text-dark mb-1">Rosca de Reyes</h3>
+            <p class="text-text-mid text-sm leading-relaxed">
+              Esponjosa, con ate de colores y costra de azúcar. La rosca tradicional para compartir en familia el Día de Reyes.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-12 reveal">
+        <a href="https://api.whatsapp.com/send/?phone=529827311387&text=Hola,+quiero+ver+su+cat%C3%A1logo+completo+de+Pan+Tapia&type=phone_number&app_absent=0" target="_blank"
+           class="btn-secondary inline-flex">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          Ver catálogo completo por WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       HISTORIA
+  ============================================================ -->
+  <section id="historia" class="historia-bg py-24 relative">
+    <div class="max-w-4xl mx-auto px-5 relative z-10">
+
+      <div class="text-center mb-12 reveal">
+        <p class="text-naranja font-sans font-bold text-xs tracking-widest uppercase mb-3">✦ Quiénes somos ✦</p>
+        <h2 class="font-serif font-extrabold leading-tight text-cream mb-4"
+            style="font-size: clamp(2rem, 5vw, 3.2rem);">
+          Nuestra Historia
+        </h2>
+        <div class="ornament-line justify-center">
+          <span class="text-naranja text-xl">🌾</span>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div class="reveal">
+          <div style="border-radius:40% 60% 50% 50% / 50% 45% 55% 50%; overflow:hidden; border:2px solid rgba(247,237,216,.2);" class="shadow-2xl aspect-square max-w-xs mx-auto md:mx-0">
+            <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600&q=85&auto=format&fit=crop"
+                 alt="Panadero artesanal" class="w-full h-full object-cover"/>
+          </div>
+        </div>
+
+        <div class="reveal text-cream-dark space-y-5" style="transition-delay:.15s">
+          <p class="font-sans text-base leading-relaxed">
+            Todo comenzó en <strong class="text-cream font-bold">1978</strong>, cuando don José Tapia levantó el primer horno de leña en el corazón de Pixtun. Con harina, manteca y mucho amor, empezó a hornear las conchas y bolillos que despertaban al pueblo cada amanecer.
+          </p>
+          <p class="font-sans text-base leading-relaxed">
+            Hoy, tres generaciones después, sus nietos siguen levantándose antes del alba para encender ese mismo fuego. La receta no ha cambiado. El compromiso tampoco: <strong class="text-cream">pan honesto, de manos campechanas, para las mesas de nuestro pueblo.</strong>
+          </p>
+          <p class="font-sans text-base leading-relaxed">
+            Porque en la Panadería Tapia creemos que el mejor ingrediente no se compra en ningún almacén. Se llama <em class="text-naranja font-semibold italic">tradición</em>.
+          </p>
+          <div class="pt-4">
+            <p class="font-serif italic text-xl text-cream/80">"El pan nuestro de cada día…<br/>lo horneamos nosotros."</p>
+            <p class="text-naranja text-sm font-sans font-bold mt-2">— Familia Tapia, Pixtun</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       UBICACIÓN Y CONTACTO
+  ============================================================ -->
+  <section id="ubicacion" class="py-20 bg-cream">
+    <div class="max-w-6xl mx-auto px-5">
+
+      <div class="text-center mb-14 reveal">
+        <p class="section-subtitle mb-3">✦ Ven a visitarnos ✦</p>
+        <h2 class="section-title">Ubicación y Horarios</h2>
+        <p class="text-text-mid font-sans mt-4 text-base max-w-md mx-auto">
+          Estamos en Pixtun, Campeche. Nos encontrarás abiertos para el café de la mañana y para el pan de la cena.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-10 items-start">
+
+        <!-- Info -->
+        <div class="space-y-6 reveal">
+
+          <!-- Dirección -->
+          <div class="flex gap-4 items-start">
+            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-terracotta/10 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="text-terracotta" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            </div>
+            <div>
+              <p class="font-sans font-bold text-text-dark text-base">Dirección</p>
+              <p class="text-text-mid text-sm leading-relaxed mt-1">Calle Principal s/n, centro de Pixtun<br/>Municipio de Champoton, Campeche, México</p>
+            </div>
+          </div>
+
+          <!-- Horarios -->
+          <div class="flex gap-4 items-start">
+            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-terracotta/10 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="text-terracotta" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="w-full">
+              <p class="font-sans font-bold text-text-dark text-base mb-3">Horarios de atención</p>
+              <div class="grid grid-cols-1 gap-3">
+                <div class="bg-cream-dark/50 border border-cream-dark rounded-xl p-4 flex items-center gap-3">
+                  <span class="text-2xl">☀️</span>
+                  <div>
+                    <p class="font-bold text-text-dark text-sm">Mañanas – El café madrugador</p>
+                    <p class="text-terracotta font-bold text-base">5:00 AM – 11:00 AM</p>
+                    <p class="text-text-mid text-xs">Pan caliente recién salido del horno</p>
+                  </div>
+                </div>
+                <div class="bg-cream-dark/50 border border-cream-dark rounded-xl p-4 flex items-center gap-3">
+                  <span class="text-2xl">🌙</span>
+                  <div>
+                    <p class="font-bold text-text-dark text-sm">Tardes-Noche – El pan de la cena</p>
+                    <p class="text-terracotta font-bold text-base">4:00 PM – 8:00 PM</p>
+                    <p class="text-text-mid text-xs">Bolillos, conchas y repostería fresca</p>
+                  </div>
+                </div>
+              </div>
+              <p class="text-xs text-text-mid mt-3 italic">
+                📅 Abiertos todos los días, incluyendo domingos y festivos.
+              </p>
+            </div>
+          </div>
+
+          <!-- Teléfono -->
+          <div class="flex gap-4 items-start">
+            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-terracotta/10 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="text-terracotta" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.61 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.73a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div>
+              <p class="font-sans font-bold text-text-dark text-base">Teléfono y WhatsApp</p>
+              <a href="tel:+529827311387" class="text-terracotta font-bold text-lg hover:underline">+52 982 731 1387</a>
+            </div>
+          </div>
+
+          <!-- CTA Maps -->
+          <a href="https://maps.app.goo.gl/ZVtmyD86VhAZSuEXA" target="_blank"
+             class="btn-primary mt-2 w-full justify-center text-base">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            Cómo llegar en Google Maps
+          </a>
+        </div>
+
+        <!-- Map placeholder -->
+        <div class="reveal map-container shadow-xl" style="transition-delay:.15s">
+          <div class="relative" style="height: 420px;">
+            <!-- Stylized map placeholder -->
+            <div class="absolute inset-0 bg-gradient-to-br from-cream-dark to-cream flex items-center justify-center">
+              <!-- Grid pattern -->
+              <svg class="absolute inset-0 w-full h-full opacity-30" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#C0614A" stroke-width="0.5"/>
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)"/>
+                <!-- Roads -->
+                <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#A0643E" stroke-width="3" opacity=".4"/>
+                <line x1="30%" y1="0" x2="30%" y2="100%" stroke="#A0643E" stroke-width="2" opacity=".3"/>
+                <line x1="65%" y1="0" x2="65%" y2="100%" stroke="#A0643E" stroke-width="1.5" opacity=".2"/>
+                <!-- Block fills -->
+                <rect x="10%" y="15%" width="15%" height="12%" fill="#C0614A" opacity=".08" rx="4"/>
+                <rect x="35%" y="20%" width="20%" height="18%" fill="#C0614A" opacity=".08" rx="4"/>
+                <rect x="70%" y="10%" width="20%" height="15%" fill="#C0614A" opacity=".08" rx="4"/>
+                <rect x="10%" y="60%" width="18%" height="20%" fill="#C0614A" opacity=".08" rx="4"/>
+                <rect x="40%" y="60%" width="22%" height="20%" fill="#C0614A" opacity=".08" rx="4"/>
+                <rect x="72%" y="58%" width="18%" height="22%" fill="#C0614A" opacity=".08" rx="4"/>
+              </svg>
+
+              <!-- Pin marker -->
+              <div class="relative z-10 flex flex-col items-center drop-shadow-2xl animate-bounce">
+                <div class="bg-terracotta text-white rounded-2xl px-4 py-3 text-center shadow-xl">
+                  <p class="font-serif font-bold text-sm">🍞 Panadería Tapia</p>
+                  <p class="text-xs opacity-80 font-sans">Pixtun, Campeche</p>
+                </div>
+                <div class="w-4 h-4 bg-terracotta rotate-45 -mt-2 rounded-sm shadow-md"></div>
+              </div>
+            </div>
+            <!-- Overlay label -->
+            <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur rounded-xl px-3 py-2 text-xs font-sans font-bold text-text-mid shadow">
+              📍 Pixtun, Champoton, Campeche
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       CTA BANNER
+  ============================================================ -->
+  <section class="py-16 relative overflow-hidden" style="background: linear-gradient(135deg, #7A4528 0%, #C0614A 50%, #E8863A 100%);">
+    <div class="absolute inset-0 opacity-10"
+         style="background-image: url('https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1200&q=60&auto=format&fit=crop'); background-size:cover;background-position:center;">
+    </div>
+    <div class="relative z-10 max-w-2xl mx-auto px-5 text-center reveal">
+      <p class="text-cream/80 font-sans text-sm tracking-widest uppercase mb-3">🔥 El horno ya está encendido</p>
+      <h2 class="font-serif font-extrabold text-cream leading-tight mb-5"
+          style="font-size: clamp(1.8rem, 4vw, 2.8rem);">
+        Haz tu pedido para mañana y recoge tu pan calientito
+      </h2>
+      <p class="text-cream/80 font-sans mb-8 text-base">
+        Escríbenos por WhatsApp y te separamos tu pan favorito. ¡Sin filas y directo del horno!
+      </p>
+      <a href="https://api.whatsapp.com/send/?phone=529827311387&text=Hola%21+Panaderia+Tapia+Quisiera+hacer+un+pedido&type=phone_number&app_absent=0" target="_blank"
+         style="background:rgba(247,237,216,.15); border:2px solid rgba(247,237,216,.5); color:#F7EDD8; font-family:'Lato',sans-serif; font-weight:700; border-radius:50px; padding:14px 36px; display:inline-flex; align-items:center; gap:10px; font-size:1rem; transition: all .2s;"
+         onmouseover="this.style.background='rgba(247,237,216,.3)'"
+         onmouseout="this.style.background='rgba(247,237,216,.15)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+        </svg>
+        Ordenar ahora por WhatsApp
+      </a>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="py-12">
+    <div class="max-w-5xl mx-auto px-5">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+        <div class="text-center md:text-left">
+          <p class="font-serif font-bold text-2xl text-cream leading-none">Panadería</p>
+          <p class="font-serif italic text-terracotta text-3xl -mt-1">Tapia</p>
+          <p class="text-cream/50 font-sans text-xs mt-2">Pixtun, Campeche · Desde 1978</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-6 text-center text-sm font-sans text-cream/60">
+          <a href="#catalogo" class="hover:text-cream transition-colors">Nuestros Panes</a>
+          <a href="#historia" class="hover:text-cream transition-colors">Nuestra Historia</a>
+          <a href="#ubicacion" class="hover:text-cream transition-colors">Ubicación</a>
+          <a href="https://wa.me/529827311387" target="_blank" class="hover:text-naranja transition-colors">WhatsApp</a>
+        </div>
+      </div>
+      <div class="border-t border-white/10 mt-8 pt-6 text-center">
+        <p class="text-cream/30 font-sans text-xs">
+          © 2025 Panadería Tapia · Con amor artesanal desde Pixtun, Campeche, México 🌾
+        </p>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ============================================================
+       FLOATING WHATSAPP
+  ============================================================ -->
+  <a href="https://wa.me/529827311387?text=Hola%21+Quiero+información+sobre+Panadería+Tapia" target="_blank"
+     class="whatsapp-float" title="Escríbenos por WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="white">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+    </svg>
+  </a>
+
+
+  <!-- ============================================================
+       SCRIPTS
+  ============================================================ -->
+  <script>
+    /* --- Navbar scroll effect --- */
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    /* --- Reveal on scroll --- */
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+
+          /* Cards drop the reveal classes once faded in, otherwise
+             .reveal.visible overrides the .card-pan hover transform/transition */
+          if (e.target.classList.contains('card-pan')) {
+            const card = e.target;
+            card.addEventListener('transitionend', function done(ev) {
+              if (ev.target !== card) return; // ignore the image's hover zoom bubbling up
+              card.removeEventListener('transitionend', done);
+              card.classList.remove('reveal', 'visible');
+              card.style.transitionDelay = '';
+            });
+          }
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+
+    /* --- Close mobile menu on resize --- */
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768) {
+        document.getElementById('nav-menu').classList.remove('open');
+      }
+    });
+  </script>
+
+</body>
+</html>
