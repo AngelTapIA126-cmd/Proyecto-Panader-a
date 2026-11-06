@@ -8,7 +8,7 @@ Single-page marketing site for Panadería Tapia, a family bakery in Pixtun, Camp
 
 ## Commands
 
-There is no build step, package manager, linter, or test suite, and the folder is not a git repository. To preview the site, open the file in a browser:
+There is no build step, package manager, linter, or test suite. To preview the site, open the file in a browser:
 
 ```powershell
 Start-Process .\panaderia-tapia.html
